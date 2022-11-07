@@ -9,7 +9,7 @@
   <parent>
     <groupId>org.jeometry</groupId>
     <artifactId>jeometry-parent</artifactId>
-    <version>MAIN-SNAPSHOT</version>
+    <version>0.AUTOMUTATIO-2022.11.06-03</version>
   </parent>
   <description>Jeometry.org Dependency Management</description>
   <url>http://revolsys.github.com/com.revolsys.open/</url>
