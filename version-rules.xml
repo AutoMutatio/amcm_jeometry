@@ -10,6 +10,7 @@
     <ignoreVersion type="regex">.*-alpha.*</ignoreVersion>
     <ignoreVersion type="regex">.*-beta.*</ignoreVersion>
     <ignoreVersion type="regex">.*-MTEC.*</ignoreVersion>
+    <ignoreVersion type="regex">.*-M.*</ignoreVersion>
   </ignoreVersions>
   <rules>
     <rule groupId="org.jeometry" comparisonMethod="maven">
