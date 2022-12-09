@@ -13,11 +13,6 @@
     <ignoreVersion type="regex">.*-M.*</ignoreVersion>
   </ignoreVersions>
   <rules>
-    <rule groupId="org.slf4j" comparisonMethod="maven">
-      <ignoreVersions>
-        <ignoreVersion type="regex">2..*</ignoreVersion>
-      </ignoreVersions>
-    </rule>
     <rule groupId="org.jeometry" comparisonMethod="maven">
       <ignoreVersions>
         <ignoreVersion type="regex">.*</ignoreVersion>
