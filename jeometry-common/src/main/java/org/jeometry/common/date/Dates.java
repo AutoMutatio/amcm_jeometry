@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +56,26 @@ public interface Dates {
 
   Pattern DATE_TIME_NANOS_PATTERN = Pattern.compile(
     "\\s*(\\d{4})-(\\d{2})-(\\d{2})(?:[\\sT]+(\\d{2})\\:(\\d{2})\\:(\\d{2})(?:\\.(\\d{1,9}))?)?\\s*");
+
+  static final DateTimeFormatter INSTANT_PARSER = new DateTimeFormatterBuilder()
+    .appendOptional(DateTimeFormatter.ISO_INSTANT)
+    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnnZ"))
+    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"))
+    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
+    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"))
+    .appendOptional(new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnn")
+      .parseLenient()
+      .appendOffset("+HH:MM", "Z")
+      .toFormatter())
+    .appendOptional(new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+      .parseLenient()
+      .appendOffset("+HH:MM", "Z")
+      .toFormatter())
+    .appendOptional(new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+      .parseLenient()
+      .appendOffset("+HH:MM", "Z")
+      .toFormatter())
+    .toFormatter();
 
   static Set<DayOfWeek> days(final int... days) {
     final Set<DayOfWeek> daysOfWeek = new TreeSet<>();
@@ -247,9 +268,13 @@ public interface Dates {
     } else {
       final String string = value.toString();
       if (string.charAt(4) == '-') {
-        return Instant.parse(string);
+        try {
+          return Instant.parse(string);
+        } catch (final Exception e) {
+          return INSTANT_PARSER.parse(string, Instant::from);
+        }
       } else {
-        return Instant.from(DateTimeFormatter.RFC_1123_DATE_TIME.parse(string));
+        return DateTimeFormatter.RFC_1123_DATE_TIME.parse(string, Instant::from);
       }
     }
   }
