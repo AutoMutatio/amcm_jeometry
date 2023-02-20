@@ -540,6 +540,10 @@ public interface Dates {
     return endTime;
   }
 
+  static Instant instantRfc1123(final String date) {
+    return DateTimeFormatter.RFC_1123_DATE_TIME.parse(date, Instant::from);
+  }
+
   static long printEllapsedTime(final long startTime) {
     final long endTime = System.currentTimeMillis();
     System.out.println(toEllapsedTime(startTime, endTime));
