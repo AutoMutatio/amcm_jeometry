@@ -7,6 +7,10 @@ public interface RefreshableValue<V> extends Refreshable {
     return new SupplierRefreshableValue<T>(supplier);
   }
 
+  static <T> RefreshableValue<T> supplier(final Supplier<T> supplier, final long expireTime) {
+    return new ExpireSupplierRefreshableValue<T>(supplier, expireTime);
+  }
+
   void clearValue();
 
   V getValue();

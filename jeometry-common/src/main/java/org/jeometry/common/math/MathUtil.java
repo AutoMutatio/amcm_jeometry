@@ -23,6 +23,15 @@ package org.jeometry.common.math;
  */
 public interface MathUtil {
 
+  static int nextPowerOf2(final int a) {
+    final int highestOneBit = Integer.highestOneBit(a);
+    if (a == highestOneBit) {
+      return a;
+    } else {
+      return 2 * highestOneBit;
+    }
+  }
+
   static Double toDouble(final Object value) {
     if (value == null) {
       throw new NumberFormatException("Numbers cannot be empty");

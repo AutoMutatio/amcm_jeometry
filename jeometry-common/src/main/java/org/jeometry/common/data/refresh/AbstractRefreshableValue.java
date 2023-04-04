@@ -25,6 +25,10 @@ public abstract class AbstractRefreshableValue<V> implements RefreshableValue<V>
     return this.value.get();
   }
 
+  public boolean hasValue() {
+    return this.value.isValueLoaded();
+  }
+
   protected abstract V loadValue();
 
   @Override
