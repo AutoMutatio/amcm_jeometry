@@ -11,20 +11,20 @@ public class DigestReadableByteChannel extends AbstractInterruptibleChannel
 
   private static final int BUF_SIZE = 1024;
 
-  private MessageDigest digest;
+  private final MessageDigest digest;
 
-  private ReadableByteChannel channel;
+  private final ReadableByteChannel channel;
 
-  private byte[] buf = new byte[BUF_SIZE];
+  private final byte[] buf = new byte[BUF_SIZE];
 
-  public DigestReadableByteChannel(ReadableByteChannel channel, MessageDigest digest) {
+  public DigestReadableByteChannel(final ReadableByteChannel channel, final MessageDigest digest) {
     this.channel = channel;
     this.digest = digest;
   }
 
   @Override
   public MessageDigest getMessageDigest() {
-    return digest;
+    return this.digest;
   }
 
   @Override
@@ -32,15 +32,15 @@ public class DigestReadableByteChannel extends AbstractInterruptibleChannel
   }
 
   @Override
-  public int read(ByteBuffer dst) throws IOException {
-    int readCount = channel.read(dst);
+  public int read(final ByteBuffer dst) throws IOException {
+    final int readCount = this.channel.read(dst);
     if (readCount > 0) {
       dst.flip();
       while (dst.hasRemaining()) {
-        int remaining = dst.remaining();
-        int count = Math.min(remaining, BUF_SIZE);
-        dst.get(buf, 0, count);
-        digest.update(buf, 0, count);
+        final int remaining = dst.remaining();
+        final int count = Math.min(remaining, BUF_SIZE);
+        dst.get(this.buf, 0, count);
+        this.digest.update(this.buf, 0, count);
       }
     }
     return readCount;

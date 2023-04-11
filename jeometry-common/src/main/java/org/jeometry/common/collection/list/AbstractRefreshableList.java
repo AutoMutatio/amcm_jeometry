@@ -11,10 +11,8 @@ public abstract class AbstractRefreshableList<V> extends AbstractDelegatingList<
 
   private String label;
 
-  private final RefreshableValueHolder<List<V>> value = new SupplierRefreshableValueHolder<List<V>>(
+  private final RefreshableValueHolder<List<V>> value = new SupplierRefreshableValueHolder<>(
     this::loadValue);
-
-  private boolean valueLoaded;
 
   public AbstractRefreshableList(final boolean editable) {
     super(editable);

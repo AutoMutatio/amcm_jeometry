@@ -10,7 +10,7 @@ import org.jeometry.common.collection.collection.AbstractDelegatingCollection;
 public abstract class AbstractDelegatingList<V> extends AbstractDelegatingCollection<V>
   implements List<V> {
   public static <V1> ListIterator<V1> unmodifiableListIterator(final ListIterator<V1> iterator) {
-    return new ListIterator<V1>() {
+    return new ListIterator<>() {
       @Override
       public void add(final V1 e) {
         throw new IllegalStateException("List is not editable");
