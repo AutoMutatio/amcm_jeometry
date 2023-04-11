@@ -23,11 +23,6 @@
         <ignoreVersion type="regex">.*-M.*</ignoreVersion>
       </ignoreVersions>
     </rule>
-    <rule groupId="org.postgresql" comparisonMethod="maven">
-      <ignoreVersions>
-        <ignoreVersion type="regex">.*.jre.*</ignoreVersion>
-      </ignoreVersions>
-    </rule>
     <rule groupId="javax.xml.bind" comparisonMethod="maven">
       <ignoreVersions>
         <ignoreVersion type="regex">.*-b\d+.\d+</ignoreVersion>

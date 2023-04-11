@@ -2,7 +2,7 @@ package org.jeometry.common.data.refresh;
 
 public abstract class AbstractRefreshableValue<V> implements RefreshableValue<V> {
 
-  private RefreshableValueHolder<V> value = new SupplierRefreshableValueHolder<V>(this::loadValue);
+  private RefreshableValueHolder<V> value = new SupplierRefreshableValueHolder<>(this::loadValue);
 
   private String label;
 
@@ -23,6 +23,10 @@ public abstract class AbstractRefreshableValue<V> implements RefreshableValue<V>
   @Override
   public V getValue() {
     return this.value.get();
+  }
+
+  public boolean hasValue() {
+    return this.value.isValueLoaded();
   }
 
   protected abstract V loadValue();

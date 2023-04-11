@@ -123,7 +123,7 @@ public final class EpsgCoordinateSystems {
 
   private static final Map<Integer, ParameterName> PARAM_NAME_BY_ID = new HashMap<>();
 
-  private static final Map<Integer, PrimeMeridian> PRIME_MERIDIAN_BY_ID = new HashMap<>();;
+  private static final Map<Integer, PrimeMeridian> PRIME_MERIDIAN_BY_ID = new HashMap<>();
 
   private static final EpsgSystemOfUnits SYSTEM_OF_UNITS = new EpsgSystemOfUnits();
 
@@ -510,10 +510,11 @@ public final class EpsgCoordinateSystems {
           final int coordinateSystemId = reader.readInt();
           final AxisName axisName = readCode(reader, AXIS_NAMES);
           final String orientation = readStringUtf8ByteCount(reader);
-          final Character abbreviation = (char)reader.readByte();
+          final char abbreviation = (char)reader.readByte();
           final UnitOfMeasure unitOfMeasure = readCode(reader, UNIT_BY_ID);
 
-          final Axis axis = new Axis(axisName, orientation, abbreviation.toString(), unitOfMeasure);
+          final Axis axis = new Axis(axisName, orientation, Character.toString(abbreviation),
+            unitOfMeasure);
           List<Axis> axises = axisesByCoordinateSystemId.get(coordinateSystemId);
           if (axises == null) {
             axises = new ArrayList<>();

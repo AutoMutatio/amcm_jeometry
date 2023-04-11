@@ -6,7 +6,7 @@ import java.security.MessageDigest;
 public class DigestOutputStream extends java.security.DigestOutputStream
   implements MessageDigestProxy {
 
-  public DigestOutputStream(OutputStream stream, MessageDigest digest) {
+  public DigestOutputStream(final OutputStream stream, final MessageDigest digest) {
     super(stream, digest);
   }
 

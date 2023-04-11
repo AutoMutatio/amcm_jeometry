@@ -107,7 +107,7 @@ public interface DataType {
   }
 
   default <V> DataTypeValueFactory<V> newFactory(final Supplier<V> supplier) {
-    return new DataTypeValueFactory<V>() {
+    return new DataTypeValueFactory<>() {
       @Override
       public V get() {
         return supplier.get();

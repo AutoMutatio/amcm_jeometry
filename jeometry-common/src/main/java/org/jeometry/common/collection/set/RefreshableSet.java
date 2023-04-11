@@ -7,12 +7,12 @@ import org.jeometry.common.collection.collection.RefreshableCollection;
 
 public interface RefreshableSet<V> extends RefreshableCollection<V>, Set<V> {
   static <V1> SupplierRefreshableSet<V1> supplier(final Supplier<Set<V1>> supplier) {
-    return new SupplierRefreshableSet<V1>(supplier, true);
+    return new SupplierRefreshableSet<>(supplier, true);
   }
 
   static <V1> SupplierRefreshableSet<V1> supplier(final Supplier<Set<V1>> supplier,
     final boolean editable) {
-    return new SupplierRefreshableSet<V1>(supplier, editable);
+    return new SupplierRefreshableSet<>(supplier, editable);
   }
 
 }

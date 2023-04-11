@@ -12,9 +12,11 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,23 +61,19 @@ public interface Dates {
 
   static final DateTimeFormatter INSTANT_PARSER = new DateTimeFormatterBuilder()
     .appendOptional(DateTimeFormatter.ISO_INSTANT)
-    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnnZ"))
-    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"))
-    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
-    .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"))
-    .appendOptional(new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss.nnnnnnnnn")
-      .parseLenient()
-      .appendOffset("+HH:MM", "Z")
-      .toFormatter())
-    .appendOptional(new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
-      .parseLenient()
-      .appendOffset("+HH:MM", "Z")
-      .toFormatter())
-    .appendOptional(new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+    .appendOptional(new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+      .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
       .parseLenient()
       .appendOffset("+HH:MM", "Z")
       .toFormatter())
     .toFormatter();
+
+  static final DateTimeFormatter INSTANT_PARSER_UTC = new DateTimeFormatterBuilder()
+    .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+    .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
+    .parseLenient()
+    .toFormatter()
+    .withZone(UTC);
 
   static Set<DayOfWeek> days(final int... days) {
     final Set<DayOfWeek> daysOfWeek = new TreeSet<>();
@@ -248,6 +246,9 @@ public interface Dates {
     } else if (value instanceof Instant) {
       final Instant date = (Instant)value;
       return date;
+    } else if (value instanceof OffsetDateTime) {
+      final OffsetDateTime date = (OffsetDateTime)value;
+      return date.toInstant();
     } else if (value instanceof java.sql.Date) {
       final java.sql.Date date = (java.sql.Date)value;
       final LocalDate localDate = date.toLocalDate();
@@ -269,9 +270,9 @@ public interface Dates {
       final String string = value.toString();
       if (string.charAt(4) == '-') {
         try {
-          return Instant.parse(string);
-        } catch (final Exception e) {
           return INSTANT_PARSER.parse(string, Instant::from);
+        } catch (final Exception e2) {
+          return INSTANT_PARSER_UTC.parse(string, Instant::from);
         }
       } else {
         return DateTimeFormatter.RFC_1123_DATE_TIME.parse(string, Instant::from);
