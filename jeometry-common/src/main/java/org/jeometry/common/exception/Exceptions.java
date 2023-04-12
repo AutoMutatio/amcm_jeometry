@@ -6,6 +6,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
 public interface Exceptions {
+  static Throwable getCause(Throwable e, final Class<? extends Throwable> clazz) {
+    while (e != null) {
+      if (clazz.isAssignableFrom(e.getClass())) {
+        return e;
+      } else {
+        e = e.getCause();
+      }
+    }
+    return null;
+  }
+
   static boolean hasCause(Throwable e, final Class<? extends Throwable> clazz) {
     while (e != null) {
       if (clazz.isAssignableFrom(e.getClass())) {

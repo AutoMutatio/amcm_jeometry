@@ -90,7 +90,7 @@ public abstract class AbstractDelegatingCollection<V> implements Collection<V> {
     if (isEditable()) {
       return iterator;
     } else {
-      return new Iterator<V>() {
+      return new Iterator<>() {
         @Override
         public boolean hasNext() {
           return iterator.hasNext();

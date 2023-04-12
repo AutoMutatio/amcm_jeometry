@@ -46,8 +46,18 @@
 
     <!-- Units of measure -->
     <dependency>
+      <groupId>javax.measure</groupId>
+      <artifactId>unit-api</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>tech.units</groupId>
       <artifactId>indriya</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>tech.uom.lib</groupId>
+      <artifactId>uom-lib-common</artifactId>
     </dependency>
 
   </dependencies>
