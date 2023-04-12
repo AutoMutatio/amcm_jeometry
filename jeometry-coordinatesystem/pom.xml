@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.jeometry</groupId>
     <artifactId>jeometry-parent</artifactId>
-    <version>MAIN-SNAPSHOT</version>
+    <version>0.AUTOMUTATIO-2023.04.11-04</version>
   </parent>
   <artifactId>jeometry-coordinatesystem</artifactId>
   <name>jeometry.org Coordinate Systems</name>
