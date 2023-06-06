@@ -342,7 +342,7 @@ public interface WebColors {
     int green = 0;
     int blue = 0;
     int opacity = 255;
-    final String colorString = color.toString().trim();
+    final String colorString = color.toString().strip();
     final int length = colorString.length();
     if (length > 1 && length < 6) {
       red = fromHex(colorString, 1, 2, 0);
