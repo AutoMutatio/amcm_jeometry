@@ -295,7 +295,9 @@ public class EsriCoordinateSystems {
   }
 
   private static void log(final String message, final IOException e) {
-    LoggerFactory.getLogger(EsriCoordinateSystems.class).error(message, e);
+    if (!e.getMessage().equals("Stream closed")) {
+      LoggerFactory.getLogger(EsriCoordinateSystems.class).error(message, e);
+    }
   }
 
   private static DataInputStream newDataInputStream(final String fileName) {

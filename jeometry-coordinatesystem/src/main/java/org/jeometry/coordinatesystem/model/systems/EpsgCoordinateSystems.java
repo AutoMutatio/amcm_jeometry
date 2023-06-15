@@ -978,7 +978,9 @@ public final class EpsgCoordinateSystems {
   }
 
   private static void log(final String message, final IOException e) {
-    LoggerFactory.getLogger(EpsgCoordinateSystems.class).error(message, e);
+    if (!e.getMessage().equals("Stream closed")) {
+      LoggerFactory.getLogger(EpsgCoordinateSystems.class).error(message, e);
+    }
   }
 
   private static GeocentricCoordinateSystem newCoordinateSystemGeocentric(final int id,
