@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.jeometry.common.logging.Logs;
 import org.jeometry.coordinatesystem.io.WktCsParser;
 import org.jeometry.coordinatesystem.model.Authority;
 import org.jeometry.coordinatesystem.model.BaseAuthority;
@@ -301,10 +302,15 @@ public class EsriCoordinateSystems {
   }
 
   private static DataInputStream newDataInputStream(final String fileName) {
-    final InputStream in = EpsgCoordinateSystems.class
-      .getResourceAsStream("/org/jeometry/coordinatesystem/esri/" + fileName);
-    final BufferedInputStream bufferedIn = new BufferedInputStream(in);
-    return new DataInputStream(bufferedIn);
+    final String name = "/org/jeometry/coordinatesystem/esri/" + fileName;
+    final InputStream in = EpsgCoordinateSystems.class.getResourceAsStream(name);
+    if (in == null) {
+      Logs.error(EsriCoordinateSystems.class, "Missing resource: " + name);
+      return null;
+    } else {
+      final BufferedInputStream bufferedIn = new BufferedInputStream(in);
+      return new DataInputStream(bufferedIn);
+    }
   }
 
   /**
