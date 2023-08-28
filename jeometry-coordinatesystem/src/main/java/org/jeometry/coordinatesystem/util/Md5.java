@@ -7,8 +7,11 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.function.Supplier;
 
 public class Md5 {
+
+  public static Supplier<MessageDigest> SUPPLIER = Md5::getMessageDigest;
 
   public static DigestReadableByteChannel channel(final ReadableByteChannel in) {
     final MessageDigest messageDigest = getMessageDigest();
