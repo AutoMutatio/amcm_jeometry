@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.jeometry.common.collection.list.ListEx;
 import org.jeometry.common.compare.CompareUtil;
 import org.jeometry.common.data.identifier.Identifier;
 import org.jeometry.common.data.type.DataType;
@@ -25,8 +26,6 @@ import org.jeometry.common.json.JsonObject;
 import org.jeometry.common.json.JsonType;
 import org.jeometry.common.logging.Logs;
 import org.jeometry.common.util.Property;
-
-import reactor.core.publisher.Flux;
 
 public interface MapEx extends MapDefault<String, Object>, Cloneable, DataTypedValue {
   static MapEx asEx(final Map<String, ? extends Object> map) {
@@ -221,23 +220,6 @@ public interface MapEx extends MapDefault<String, Object>, Cloneable, DataTypedV
     }
   }
 
-  @SuppressWarnings({
-    "unchecked", "rawtypes"
-  })
-  default <V> Flux<V> getFlux(final CharSequence name) {
-    final Object value = getValue(name);
-    if (value == null) {
-      return Flux.empty();
-    } else if (value instanceof Flux) {
-      return (Flux)value;
-    } else if (value instanceof Iterable) {
-      return Flux.fromIterable((Iterable)value);
-    } else {
-      throw new IllegalArgumentException(
-        "Cannot convert " + value.getClass() + " to Flux \n" + value);
-    }
-  }
-
   default Identifier getIdentifier(final CharSequence fieldName) {
     final Object value = getValue(fieldName);
     return Identifier.newIdentifier(value);
@@ -279,7 +261,7 @@ public interface MapEx extends MapDefault<String, Object>, Cloneable, DataTypedV
   }
 
   default JsonObject getJsonObject(final CharSequence name) {
-    return getValue(name, Json.JSON_OBJECT);
+    return getValue(name, Json.JSON_OBJECT, JsonObject.EMPTY);
   }
 
   default JsonObject getJsonObject(final CharSequence name, final JsonObject defaultValue) {
@@ -289,6 +271,10 @@ public interface MapEx extends MapDefault<String, Object>, Cloneable, DataTypedV
     } else {
       return value;
     }
+  }
+
+  default <V> ListEx<V> getList(final CharSequence name) {
+    return getValue(name, DataTypes.LIST, ListEx.empty());
   }
 
   default Long getLong(final CharSequence name) {

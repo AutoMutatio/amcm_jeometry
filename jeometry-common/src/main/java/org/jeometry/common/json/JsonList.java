@@ -1,7 +1,6 @@
 package org.jeometry.common.json;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,12 +11,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.jeometry.common.collection.iterator.Iterators;
-import org.jeometry.common.collection.iterator.Reader;
+import org.jeometry.common.collection.list.ArrayListEx;
 import org.jeometry.common.collection.list.ListEx;
 import org.jeometry.common.data.type.DataType;
 import org.jeometry.common.exception.Exceptions;
-
-import reactor.core.publisher.Flux;
 
 public interface JsonList extends ListEx<Object>, JsonType {
 
@@ -252,11 +249,10 @@ public interface JsonList extends ListEx<Object>, JsonType {
     return true;
   }
 
-  @SuppressWarnings({
-    "unchecked", "rawtypes"
-  })
-  default <T> Flux<T> flux() {
-    return (Flux)Flux.fromIterable(this);
+  default void forEachJsonObject(final Consumer<JsonObject> action) {
+    ListEx.super.forEach(value -> {
+      action.accept((JsonObject)value);
+    });
   }
 
   default <T> void forEachType(final Consumer<T> action) {
@@ -272,15 +268,8 @@ public interface JsonList extends ListEx<Object>, JsonType {
     return (Iterable)this;
   }
 
-  @SuppressWarnings({
-    "unchecked", "rawtypes"
-  })
-  default Reader<JsonObject> jsonObjects() {
-    return (Reader)Reader.wrap(iterator());
-  }
-
-  default <T> List<T> mapTo(final Function<JsonObject, T> mapper) {
-    final List<T> objects = new ArrayList<>();
+  default <T> ListEx<T> mapTo(final Function<JsonObject, T> mapper) {
+    final ListEx<T> objects = new ArrayListEx<>();
     forEachType((final JsonObject record) -> {
       final T object = mapper.apply(record);
       objects.add(object);

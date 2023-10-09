@@ -15,7 +15,6 @@
  */
 package org.jeometry.common.collection.iterator;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -23,15 +22,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.jeometry.common.util.BaseCloseable;
 import org.jeometry.common.util.Cancellable;
-import org.jeometry.common.util.ExitLoopException;
 import org.jeometry.common.util.ObjectWithProperties;
-
-import reactor.core.publisher.Flux;
 
 /**
  * <p>
@@ -54,7 +48,8 @@ import reactor.core.publisher.Flux;
  * @author Paul Austin
  * @param <T> The type of the item to read.
  */
-public interface Reader<T> extends Iterable<T>, ObjectWithProperties, BaseCloseable, Cancellable {
+public interface Reader<T>
+  extends BaseIterable<T>, ObjectWithProperties, BaseCloseable, Cancellable {
   Reader<?> EMPTY = wrap(Collections.emptyIterator());
 
   @SuppressWarnings("unchecked")
@@ -73,7 +68,8 @@ public interface Reader<T> extends Iterable<T>, ObjectWithProperties, BaseClosea
   default void close() {
   }
 
-  default Reader<T> filter(final Predicate<T> filter) {
+  @Override
+  default Reader<T> filter(final Predicate<? super T> filter) {
     final Iterator<T> iterator = iterator();
     return new FilterIterator<>(filter, iterator);
   }
@@ -82,90 +78,18 @@ public interface Reader<T> extends Iterable<T>, ObjectWithProperties, BaseClosea
     return filter(filter).map(converter);
   }
 
-  default Flux<T> flux() {
-    return Flux.fromIterable(this);
-  }
-
   default void forEach(final BiConsumer<Cancellable, ? super T> action) {
     forEach(this, action);
   }
 
-  default void forEach(final Cancellable cancellable,
-    final BiConsumer<Cancellable, ? super T> action) {
-    try (
-      Reader<?> reader = this) {
-      if (iterator() != null) {
-        try {
-          for (final T item : this) {
-            if (cancellable.isCancelled()) {
-              return;
-            } else {
-              action.accept(cancellable, item);
-            }
-          }
-        } catch (final ExitLoopException e) {
-        }
-      }
-    }
-  }
-
-  default void forEach(final Cancellable cancellable, final Consumer<? super T> action) {
-    try (
-      Reader<?> reader = this) {
-      if (iterator() != null) {
-        try {
-          for (final T item : this) {
-            if (cancellable.isCancelled()) {
-              return;
-            } else {
-              action.accept(item);
-            }
-          }
-        } catch (final ExitLoopException e) {
-        }
-      }
-    }
-  }
-
-  /**
-   * Visit each item returned from the reader until all items have been visited
-   * or the visit method returns false.
-   *
-   * @param visitor The visitor.
-   */
   @Override
-  default void forEach(final Consumer<? super T> action) {
-    try (
-      Reader<?> reader = this) {
-      if (iterator() != null) {
-        try {
-          for (final T item : this) {
-            action.accept(item);
-          }
-        } catch (final ExitLoopException e) {
-        }
-      }
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  default <V extends T> V getFirst() {
-    try (
-      Reader<?> reader = this) {
-      final Iterator<T> iterator = iterator();
-      if (iterator.hasNext()) {
-        return (V)iterator.next();
-      }
-    }
-    return null;
-  }
-
   @SuppressWarnings("unchecked")
   default <V extends T> Iterable<V> i() {
     return (Iterable<V>)this;
   }
 
-  default <O> Reader<O> map(final Function<T, O> converter) {
+  @Override
+  default <O> Reader<O> map(final Function<? super T, O> converter) {
     final var iterator = iterator();
     return new IteratorConvertReader<>(iterator, converter);
   }
@@ -176,34 +100,4 @@ public interface Reader<T> extends Iterable<T>, ObjectWithProperties, BaseClosea
   default void open() {
   }
 
-  default Stream<T> parallelStream() {
-    return StreamSupport.stream(spliterator(), true);
-  }
-
-  default void skipAll() {
-    for (final Iterator<T> iterator = iterator(); iterator.hasNext();) {
-    }
-  }
-
-  default Stream<T> stream() {
-    return StreamSupport.stream(spliterator(), false);
-  }
-
-  /**
-   * Read all items and return a List containing the items.
-   *
-   * @return The list of items.
-   */
-  default List<T> toList() {
-    final List<T> items = new ArrayList<>();
-    try (
-      Reader<?> reader = this) {
-      if (iterator() != null) {
-        for (final T item : this) {
-          items.add(item);
-        }
-      }
-    }
-    return items;
-  }
 }

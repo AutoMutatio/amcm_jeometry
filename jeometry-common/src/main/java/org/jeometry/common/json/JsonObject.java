@@ -13,8 +13,6 @@ import org.jeometry.common.data.type.DataType;
 import org.jeometry.common.data.type.DataTypeValueFactory;
 import org.jeometry.common.exception.Exceptions;
 
-import reactor.core.publisher.Mono;
-
 public interface JsonObject extends MapEx, JsonType {
   JsonObject EMPTY = new JsonObject() {
     @Override
@@ -271,10 +269,6 @@ public interface JsonObject extends MapEx, JsonType {
 
   default <V> V mapTo(final Function<JsonObject, V> mapper) {
     return mapper.apply(this);
-  }
-
-  default Mono<JsonObject> mono() {
-    return Mono.just(this);
   }
 
   @Override

@@ -25,6 +25,7 @@ import java.util.UUID;
 import javax.xml.namespace.QName;
 
 import org.jeometry.common.awt.WebColors;
+import org.jeometry.common.collection.list.ListEx;
 import org.jeometry.common.data.identifier.Identifier;
 import org.jeometry.common.date.Dates;
 import org.jeometry.common.exception.Exceptions;
@@ -108,13 +109,13 @@ public final class DataTypes {
   public static final DataType CODE = new CodeDataType();
 
   public static final DataType COLOR = new FunctionDataType("color", Color.class,
-    value -> WebColors.toColor(value), WebColors::toString);
+    WebColors::toColor, WebColors::toString);
 
   public static final DataType UTIL_DATE = new FunctionDataType("utilDate", java.util.Date.class,
-    value -> Dates.getDate(value), Dates::toDateTimeIsoString, Dates::equalsNotNull);
+    Dates::getDate, Dates::toDateTimeIsoString, Dates::equalsNotNull);
 
   public static final DataType DATE_TIME = new FunctionDataType("dateTime", Timestamp.class,
-    value -> Dates.getTimestamp(value), Dates::toTimestampIsoString, Dates::equalsNotNull);
+    Dates::getTimestamp, Dates::toTimestampIsoString, Dates::equalsNotNull);
 
   public static final DataType DECIMAL = new BigDecimalDataType();
 
@@ -150,7 +151,7 @@ public final class DataTypes {
   public static final DataType SHORT = new ShortDataType();
 
   public static final DataType SQL_DATE = new FunctionDataType("date", java.sql.Date.class,
-    value -> Dates.getSqlDate(value), Dates::toSqlDateString, Dates::equalsNotNull);
+    Dates::getSqlDate, Dates::toSqlDateString, Dates::equalsNotNull);
 
   public static final DataType STRING = new FunctionDataType("string", String.class,
     DataTypes::toString);
@@ -160,13 +161,13 @@ public final class DataTypes {
   public static final DataType TIME = new SimpleDataType("time", Time.class);
 
   public static final DataType TIMESTAMP = new FunctionDataType("timestamp", Timestamp.class,
-    value -> Dates.getTimestamp(value), Dates::toTimestampIsoString, Dates::equalsNotNull);
+    Dates::getTimestamp, Dates::toTimestampIsoString, Dates::equalsNotNull);
 
   public static final DataType INSTANT = new FunctionDataType("instant", Instant.class,
-    value -> Dates.getInstant(value), Dates::toInstantIsoString, Object::equals);
+    Dates::getInstant, Dates::toInstantIsoString, Object::equals);
 
   public static final DataType LOCAL_DATE = new FunctionDataType("localDate", LocalDate.class,
-    value -> Dates.getLocalDate(value), Dates::toLocalDateIsoString, Object::equals);
+    Dates::getLocalDate, Dates::toLocalDateIsoString, Object::equals);
 
   public static final DataType URL = new FunctionDataType("url", java.net.URL.class, value -> {
     if (value instanceof URL) {
@@ -206,7 +207,7 @@ public final class DataTypes {
     }
   });
 
-  public static final DataType UUID = new FunctionDataType("uuid", UUID.class, (value) -> {
+  public static final DataType UUID = new FunctionDataType("uuid", UUID.class, value -> {
     if (value instanceof UUID) {
       return (UUID)value;
     } else {
@@ -219,7 +220,7 @@ public final class DataTypes {
   public static final DataType COLLECTION = new CollectionDataType("Collection", Collection.class,
     OBJECT);
 
-  public static final DataType LIST = new ListDataType(List.class, OBJECT);
+  public static final DataType LIST = new ListDataType(ListEx.class, OBJECT);
 
   public static final DataType RELATION = new CollectionDataType("Relation", Collection.class,
     OBJECT);

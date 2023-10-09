@@ -13,9 +13,9 @@ public class IteratorConvertReader<I, O> extends AbstractReader<O> implements It
 
   private ObjectWithProperties object;
 
-  private final Function<I, O> converter;
+  private final Function<? super I, O> converter;
 
-  public IteratorConvertReader(final Iterator<I> iterator, final Function<I, O> converter) {
+  public IteratorConvertReader(final Iterator<I> iterator, final Function<? super I, O> converter) {
     if (iterator == null) {
       this.iterator = Collections.emptyIterator();
     } else {

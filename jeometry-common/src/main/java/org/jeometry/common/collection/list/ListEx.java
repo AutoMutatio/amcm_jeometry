@@ -14,10 +14,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import javax.measure.Quantity;
 import javax.measure.Unit;
 
+import org.jeometry.common.collection.iterator.BaseIterable;
 import org.jeometry.common.data.type.DataType;
 import org.jeometry.common.data.type.DataTypes;
 import org.jeometry.common.util.Property;
@@ -25,7 +27,7 @@ import org.jeometry.common.util.StringBuilders;
 
 import tech.units.indriya.quantity.Quantities;
 
-public interface ListEx<V> extends List<V>, Cloneable {
+public interface ListEx<T> extends List<T>, Cloneable, BaseIterable<T> {
 
   static class EmptyList<E> extends AbstractList<E> implements RandomAccess, ListEx<E> {
 
@@ -134,30 +136,30 @@ public interface ListEx<V> extends List<V>, Cloneable {
   }
 
   @SuppressWarnings("unchecked")
-  default ListEx<V> addAll(final V... values) {
-    for (final V v : values) {
+  default ListEx<T> addAll(final T... values) {
+    for (final T v : values) {
       addValue(v);
     }
     return this;
   }
 
-  default ListEx<V> addNotEmpty(final V value) {
+  default ListEx<T> addNotEmpty(final T value) {
     if (!Property.isEmpty(value)) {
       add(value);
     }
     return this;
   }
 
-  default ListEx<V> addValue(final V value) {
+  default ListEx<T> addValue(final T value) {
     add(value);
     return this;
   }
 
-  ListEx<V> clone();
+  ListEx<T> clone();
 
-  default ListEx<V> filter(final Predicate<? super V> filter) {
-    final ListEx<V> newList = new ArrayListEx<>();
-    for (final V value : this) {
+  default ListEx<T> filter(final Predicate<? super T> filter) {
+    final ListEx<T> newList = new ArrayListEx<>();
+    for (final T value : this) {
       if (filter.test(value)) {
         newList.add(value);
       }
@@ -176,6 +178,11 @@ public interface ListEx<V> extends List<V>, Cloneable {
     } else {
       return value;
     }
+  }
+
+  @Override
+  default T getFirst() {
+    return List.super.getFirst();
   }
 
   default Integer getInteger(final int index) {
@@ -224,17 +231,17 @@ public interface ListEx<V> extends List<V>, Cloneable {
   }
 
   @SuppressWarnings("unchecked")
-  default <T> T getValue(final int index) {
-    return (T)get(index);
+  default <V> V getValue(final int index) {
+    return (V)get(index);
   }
 
-  default <T extends Object> T getValue(final int index, final DataType dataType) {
+  default <V extends Object> V getValue(final int index, final DataType dataType) {
     final Object value = get(index);
     return dataType.toObject(value);
   }
 
-  default <T extends Object> T getValue(final int index, final T defaultValue) {
-    final T value = getValue(index);
+  default <lock extends Object> lock getValue(final int index, final lock defaultValue) {
+    final lock value = getValue(index);
     if (value == null) {
       return defaultValue;
     } else {
@@ -248,9 +255,9 @@ public interface ListEx<V> extends List<V>, Cloneable {
     return string.toString();
   }
 
-  default <OUT> ListEx<OUT> map(final Function<? super V, OUT> converter) {
+  default <OUT> ListEx<OUT> map(final Function<? super T, OUT> converter) {
     final ListEx<OUT> newList = new ArrayListEx<>();
-    for (final V value : this) {
+    for (final T value : this) {
       final OUT newValue = converter.apply(value);
       newList.add(newValue);
     }
@@ -258,7 +265,12 @@ public interface ListEx<V> extends List<V>, Cloneable {
   }
 
   @Override
-  default V removeLast() {
+  default Stream<T> parallelStream() {
+    return List.super.parallelStream();
+  }
+
+  @Override
+  default T removeLast() {
     if (size() > 0) {
       return remove(size() - 1);
     } else {
@@ -266,13 +278,20 @@ public interface ListEx<V> extends List<V>, Cloneable {
     }
   }
 
-  default ListEx<V> sortThis(final Comparator<? super V> converter) {
+  default ListEx<T> sortThis(final Comparator<? super T> converter) {
     sort(converter);
     return this;
   }
 
-  default ListEx<V> subList(final int fromIndex) {
-    if (fromIndex == 0) {
+  @Override
+  default Stream<T> stream() {
+    return List.super.stream();
+  }
+
+  default ListEx<T> subList(final int fromIndex) {
+    if (fromIndex < 0) {
+      throw new IllegalArgumentException("Index must be >=0");
+    } else if (fromIndex == 0) {
       return this;
     } else if (fromIndex < size()) {
       return subList(fromIndex, size());
@@ -282,7 +301,7 @@ public interface ListEx<V> extends List<V>, Cloneable {
   }
 
   @Override
-  ListEx<V> subList(final int fromIndex, final int toIndex);
+  ListEx<T> subList(final int fromIndex, final int toIndex);
 
   default int[] toIntArray() {
     final int[] array = new int[size()];

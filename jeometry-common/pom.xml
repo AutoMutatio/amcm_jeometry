@@ -46,12 +46,6 @@
       <groupId>tech.uom.lib</groupId>
       <artifactId>uom-lib-common</artifactId>
     </dependency>
-    <!-- TODO remove -->
-    <dependency>
-      <groupId>io.projectreactor</groupId>
-      <artifactId>reactor-core</artifactId>
-    </dependency>
-
   </dependencies>
 
 </project>
