@@ -410,15 +410,15 @@ public class Angle {
 
   public static double toDecimalDegrees(String text) {
     if (text != null) {
-      text = text.toString().trim();
+      text = text.toString().strip();
 
       if (text.length() > 0) {
         boolean negative = false;
         if (text.endsWith("S") || text.endsWith("W")) {
           negative = true;
-          text = text.substring(0, text.length() - 1).trim();
+          text = text.substring(0, text.length() - 1).strip();
         } else if (text.endsWith("E") || text.endsWith("N")) {
-          text = text.substring(0, text.length() - 1).trim();
+          text = text.substring(0, text.length() - 1).strip();
         }
         final String[] parts = text.split("[\\*°'\":\\s]+");
         double decimalDegrees = 0;

@@ -68,7 +68,7 @@ public class CustomUnits extends AbstractSystemOfUnits {
     "grad");
 
   /** 0.3048/12 m */
-  public static final Unit<Length> INCH = addUnit(Units.METRE.divide(12), "inch", "\"");
+  public static final Unit<Length> INCH = addUnit(FOOT.divide(12), "inch", "\"");
 
   public static final Unit<Length> INDIAN_YARD = addUnit(Units.METRE.multiply(36).divide(39.370142),
     "Indian yard", "yd");
