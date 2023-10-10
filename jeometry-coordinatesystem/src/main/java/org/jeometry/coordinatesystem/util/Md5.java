@@ -7,6 +7,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class Md5 {
 
@@ -51,6 +52,21 @@ public class Md5 {
 
   public static byte[] md5(final String data) {
     return md5(data.getBytes(StandardCharsets.UTF_8));
+  }
+
+  public static String md5Base64(final byte[] data) {
+    final byte[] md5 = md5(data);
+    return Base64.getEncoder().encodeToString(md5);
+  }
+
+  public static String md5Base64(final InputStream data) throws IOException {
+    final byte[] md5 = md5(data);
+    return Base64.getEncoder().encodeToString(md5);
+  }
+
+  public static String md5Base64(final String data) {
+    final byte[] md5 = md5(data);
+    return Base64.getEncoder().encodeToString(md5);
   }
 
   public static String md5Hex(final byte[] data) {

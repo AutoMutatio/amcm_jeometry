@@ -88,7 +88,7 @@ public class WktCsParser {
     while (this.value.charAt(this.index) != '[' && this.value.charAt(this.index) != ']') {
       this.index++;
     }
-    final String name = new String(this.value.substring(startIndex, this.index)).trim();
+    final String name = new String(this.value.substring(startIndex, this.index)).strip();
     return name;
   }
 

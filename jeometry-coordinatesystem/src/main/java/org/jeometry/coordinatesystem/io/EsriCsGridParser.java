@@ -170,7 +170,7 @@ public class EsriCsGridParser {
     final List<String> projectionParameters = new ArrayList<>();
     boolean inParameters = false;
     for (String line : lines) {
-      line = line.trim().replaceAll("/\\*", "");
+      line = line.strip().replaceAll("/\\*", "");
       if (line.equals("projection")) {
         inParameters = true;
       } else if (inParameters) {

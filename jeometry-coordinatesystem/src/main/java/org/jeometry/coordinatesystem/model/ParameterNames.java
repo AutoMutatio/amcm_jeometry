@@ -143,7 +143,7 @@ public class ParameterNames {
   }
 
   public static String normalizeName(final String name) {
-    return name.trim().toLowerCase().replace(' ', '_').replaceAll("[^a-z0-9_]", "");
+    return name.strip().toLowerCase().replace(' ', '_').replaceAll("[^a-z0-9_]", "");
   }
 
   private ParameterNames() {
