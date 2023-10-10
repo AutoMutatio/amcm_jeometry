@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.jeometry.common.logging.Logs;
 import org.jeometry.coordinatesystem.model.Area;
 import org.jeometry.coordinatesystem.model.Authority;
 import org.jeometry.coordinatesystem.model.Axis;
@@ -978,7 +979,9 @@ public final class EpsgCoordinateSystems {
   }
 
   private static void log(final String message, final IOException e) {
-    LoggerFactory.getLogger(EpsgCoordinateSystems.class).error(message, e);
+    if (!e.getMessage().equals("Stream closed")) {
+      LoggerFactory.getLogger(EpsgCoordinateSystems.class).error(message, e);
+    }
   }
 
   private static GeocentricCoordinateSystem newCoordinateSystemGeocentric(final int id,
@@ -1011,10 +1014,15 @@ public final class EpsgCoordinateSystems {
   }
 
   private static DataInputStream newDataInputStream(final String fileName) {
-    final InputStream in = EpsgCoordinateSystems.class
-      .getResourceAsStream("/org/jeometry/coordinatesystem/epsg/" + fileName + ".bin");
-    final BufferedInputStream bufferedIn = new BufferedInputStream(in);
-    return new DataInputStream(bufferedIn);
+    final String name = "/org/jeometry/coordinatesystem/epsg/" + fileName + ".bin";
+    final InputStream in = EpsgCoordinateSystems.class.getResourceAsStream(name);
+    if (in == null) {
+      Logs.error(EsriCoordinateSystems.class, "Missing resource: " + name);
+      return null;
+    } else {
+      final BufferedInputStream bufferedIn = new BufferedInputStream(in);
+      return new DataInputStream(bufferedIn);
+    }
   }
 
   private static boolean readBoolean(final DataInputStream reader) throws IOException {

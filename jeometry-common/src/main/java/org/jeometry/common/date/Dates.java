@@ -291,7 +291,7 @@ public interface Dates {
 
   static Calendar getIsoCalendar(String dateString) {
     if (dateString != null) {
-      dateString = dateString.trim();
+      dateString = dateString.strip();
       final int length = dateString.length();
 
       if (length < 4) {
