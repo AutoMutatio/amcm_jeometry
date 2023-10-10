@@ -57,8 +57,19 @@ public class Md5 {
     return md5(data.getBytes(StandardCharsets.UTF_8));
   }
 
-  public static String md5Base64(final InputStream in) throws IOException {
-    return Base64.getEncoder().encodeToString(md5(in));
+  public static String md5Base64(final byte[] data) {
+    final byte[] md5 = md5(data);
+    return Base64.getEncoder().encodeToString(md5);
+  }
+
+  public static String md5Base64(final InputStream data) throws IOException {
+    final byte[] md5 = md5(data);
+    return Base64.getEncoder().encodeToString(md5);
+  }
+
+  public static String md5Base64(final String data) {
+    final byte[] md5 = md5(data);
+    return Base64.getEncoder().encodeToString(md5);
   }
 
   public static String md5Hex(final byte[] data) {
