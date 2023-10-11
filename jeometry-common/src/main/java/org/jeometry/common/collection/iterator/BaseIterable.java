@@ -139,22 +139,25 @@ public interface BaseIterable<T> extends Iterable<T> {
     }
   }
 
-  default void forEach(final Cancellable cancellable, final Consumer<? super T> action) {
+  default int forEach(final Cancellable cancellable, final Consumer<? super T> action) {
+    int i = 0;
     try (
       var c = closeable()) {
       if (iterator() != null) {
         try {
           for (final T item : this) {
             if (cancellable.isCancelled()) {
-              return;
+              return -1;
             } else {
               action.accept(item);
             }
+            i++;
           }
         } catch (final ExitLoopException e) {
         }
       }
     }
+    return i;
   }
 
   /**

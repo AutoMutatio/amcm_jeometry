@@ -23,6 +23,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.jeometry.common.collection.map.MapEx;
+import org.jeometry.common.json.JsonObject;
 import org.jeometry.common.util.BaseCloseable;
 import org.jeometry.common.util.Cancellable;
 import org.jeometry.common.util.ObjectWithProperties;
@@ -83,9 +85,19 @@ public interface Reader<T>
   }
 
   @Override
+  default MapEx getProperties() {
+    return JsonObject.EMPTY;
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   default <V extends T> Iterable<V> i() {
     return (Iterable<V>)this;
+  }
+
+  @Override
+  default boolean isCancelled() {
+    return false;
   }
 
   @Override
