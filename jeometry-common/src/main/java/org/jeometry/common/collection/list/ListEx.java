@@ -11,7 +11,6 @@ import java.util.RandomAccess;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -23,7 +22,6 @@ import org.jeometry.common.collection.iterator.BaseIterable;
 import org.jeometry.common.data.type.DataType;
 import org.jeometry.common.data.type.DataTypes;
 import org.jeometry.common.util.Property;
-import org.jeometry.common.util.StringBuilders;
 
 import tech.units.indriya.quantity.Quantities;
 
@@ -143,6 +141,13 @@ public interface ListEx<T> extends List<T>, Cloneable, BaseIterable<T> {
     return this;
   }
 
+  default ListEx<T> addAllIterable(final Iterable<? extends T> values) {
+    for (final T v : values) {
+      addValue(v);
+    }
+    return this;
+  }
+
   default ListEx<T> addNotEmpty(final T value) {
     if (!Property.isEmpty(value)) {
       add(value);
@@ -157,6 +162,7 @@ public interface ListEx<T> extends List<T>, Cloneable, BaseIterable<T> {
 
   ListEx<T> clone();
 
+  @Override
   default ListEx<T> filter(final Predicate<? super T> filter) {
     final ListEx<T> newList = new ArrayListEx<>();
     for (final T value : this) {
@@ -247,21 +253,6 @@ public interface ListEx<T> extends List<T>, Cloneable, BaseIterable<T> {
     } else {
       return value;
     }
-  }
-
-  default String join(final String separator) {
-    final StringBuilder string = new StringBuilder();
-    StringBuilders.append(string, this, separator);
-    return string.toString();
-  }
-
-  default <OUT> ListEx<OUT> map(final Function<? super T, OUT> converter) {
-    final ListEx<OUT> newList = new ArrayListEx<>();
-    for (final T value : this) {
-      final OUT newValue = converter.apply(value);
-      newList.add(newValue);
-    }
-    return newList;
   }
 
   @Override
