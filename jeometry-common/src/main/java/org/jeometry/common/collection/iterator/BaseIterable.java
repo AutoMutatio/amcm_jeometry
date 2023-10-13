@@ -37,6 +37,7 @@ import org.jeometry.common.collection.list.Lists;
 import org.jeometry.common.util.BaseCloseable;
 import org.jeometry.common.util.Cancellable;
 import org.jeometry.common.util.ExitLoopException;
+import org.jeometry.common.util.Single;
 import org.jeometry.common.util.StringBuilders;
 
 /**
@@ -118,6 +119,10 @@ public interface BaseIterable<T> extends Iterable<T> {
       }
     }
     return newList;
+  }
+
+  default Single<T> first() {
+    return Single.ofNullable(getFirst());
   }
 
   default void forEach(final Cancellable cancellable,
