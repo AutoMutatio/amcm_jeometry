@@ -1,4 +1,4 @@
-package org.jeometry.common.util;
+package org.jeometry.common.collection.value;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;

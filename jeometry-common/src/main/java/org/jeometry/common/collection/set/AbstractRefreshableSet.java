@@ -3,7 +3,6 @@ package org.jeometry.common.collection.set;
 import java.util.Collections;
 import java.util.Set;
 
-import org.jeometry.common.data.refresh.RefreshableValueHolder;
 import org.jeometry.common.data.refresh.SupplierRefreshableValueHolder;
 
 public abstract class AbstractRefreshableSet<V> extends AbstractDelegatingSet<V>
@@ -11,7 +10,7 @@ public abstract class AbstractRefreshableSet<V> extends AbstractDelegatingSet<V>
 
   private String label;
 
-  private final RefreshableValueHolder<Set<V>> value = new SupplierRefreshableValueHolder<>(
+  private final SupplierRefreshableValueHolder<Set<V>> value = new SupplierRefreshableValueHolder<>(
     this::loadValue);
 
   public AbstractRefreshableSet(final boolean editable) {
@@ -19,7 +18,7 @@ public abstract class AbstractRefreshableSet<V> extends AbstractDelegatingSet<V>
   }
 
   @Override
-  public synchronized void clearValue() {
+  public void clearValue() {
     this.value.clear();
   }
 
@@ -45,13 +44,13 @@ public abstract class AbstractRefreshableSet<V> extends AbstractDelegatingSet<V>
   protected abstract Set<V> loadValue();
 
   @Override
-  public synchronized void refresh() {
+  public void refresh() {
     this.value.reload();
   }
 
   @Override
-  public synchronized void refreshIfNeeded() {
-    this.value.get();
+  public void refreshIfNeeded() {
+    this.value.refreshIfNeeded();
   }
 
   public AbstractRefreshableSet<V> setLabel(final String label) {

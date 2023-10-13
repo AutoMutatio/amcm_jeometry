@@ -3,12 +3,10 @@ package org.jeometry.common.util;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jeometry.common.collection.map.MapEx;
-import org.jeometry.common.collection.map.ThreadSharedProperties;
 import org.jeometry.common.data.type.DataType;
 import org.jeometry.common.io.MapSerializer;
 import org.jeometry.common.logging.Logs;
@@ -99,22 +97,6 @@ public interface ObjectWithProperties {
     }
   }
 
-  default Map<String, Object> getThreadProperties() {
-    Map<String, Object> properties = ThreadSharedProperties.getProperty(this);
-    if (properties == null) {
-      properties = new HashMap<>();
-      ThreadSharedProperties.setProperty(this, properties);
-    }
-    return properties;
-  }
-
-  @SuppressWarnings("unchecked")
-  default <T> T getThreadProperty(final String name) {
-    final Map<String, Object> properties = getThreadProperties();
-    final T value = (T)properties.get(name);
-    return value;
-  }
-
   default boolean hasProperty(final String name) {
     final Object value = getProperty(name);
     return org.jeometry.common.util.Property.hasValue(value);
@@ -165,8 +147,4 @@ public interface ObjectWithProperties {
     setProperty(name, new WeakReference<>(value));
   }
 
-  default void setThreadProperty(final String name, final Object value) {
-    final Map<String, Object> properties = getThreadProperties();
-    properties.put(name, value);
-  }
 }

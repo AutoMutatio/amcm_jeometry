@@ -34,10 +34,10 @@ import java.util.stream.StreamSupport;
 import org.jeometry.common.collection.list.ArrayListEx;
 import org.jeometry.common.collection.list.ListEx;
 import org.jeometry.common.collection.list.Lists;
+import org.jeometry.common.collection.value.Single;
 import org.jeometry.common.util.BaseCloseable;
 import org.jeometry.common.util.Cancellable;
 import org.jeometry.common.util.ExitLoopException;
-import org.jeometry.common.util.Single;
 import org.jeometry.common.util.StringBuilders;
 
 /**

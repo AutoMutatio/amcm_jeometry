@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.jeometry.common.collection.map.Maps;
 
@@ -16,10 +17,15 @@ public class PropertyDescriptorCache {
 
   private static Map<Class<?>, Map<String, Method>> propertyWriteMethodByClassAndName = new WeakHashMap<>();
 
+  private static final ReentrantLock lock = new ReentrantLock();
+
   public static void clearCache() {
-    synchronized (propertyDescriptorByClassAndName) {
+    lock.lock();
+    try {
       propertyDescriptorByClassAndName.clear();
       propertyWriteMethodByClassAndName.clear();
+    } finally {
+      lock.unlock();
     }
   }
 
@@ -40,7 +46,8 @@ public class PropertyDescriptorCache {
   }
 
   protected static Map<String, PropertyDescriptor> getPropertyDescriptors(final Class<?> clazz) {
-    synchronized (propertyDescriptorByClassAndName) {
+    lock.lock();
+    try {
       Map<String, PropertyDescriptor> propertyDescriptors = propertyDescriptorByClassAndName
         .get(clazz);
       if (propertyDescriptors == null) {
@@ -70,17 +77,22 @@ public class PropertyDescriptorCache {
         propertyDescriptorByClassAndName.put(clazz, propertyDescriptors);
       }
       return propertyDescriptors;
+    } finally {
+      lock.unlock();
     }
   }
 
   protected static Map<String, Method> getWriteMethods(final Class<?> clazz) {
-    synchronized (propertyDescriptorByClassAndName) {
+    lock.lock();
+    try {
       Map<String, Method> writeMethods = propertyWriteMethodByClassAndName.get(clazz);
       if (writeMethods == null) {
         getPropertyDescriptors(clazz);
         writeMethods = propertyWriteMethodByClassAndName.get(clazz);
       }
       return writeMethods;
+    } finally {
+      lock.unlock();
     }
   }
 

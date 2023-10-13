@@ -15,7 +15,7 @@ public abstract class AbstractMultipleIterator<T> extends AbstractIterator<T> {
     }
   }
 
-  protected synchronized AbstractIterator<T> getIterator() {
+  protected AbstractIterator<T> getIterator() {
     if (this.iterator == null) {
       this.iterator = getNextIterator();
     }
@@ -23,7 +23,7 @@ public abstract class AbstractMultipleIterator<T> extends AbstractIterator<T> {
   }
 
   @Override
-  protected synchronized T getNext() throws NoSuchElementException {
+  protected T getNext() throws NoSuchElementException {
     try {
       if (this.iterator == null) {
         this.iterator = getNextIterator();

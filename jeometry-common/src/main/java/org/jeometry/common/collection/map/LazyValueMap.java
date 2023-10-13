@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 
-public class LazyLambdaMap<K, V> extends DelegatingMap<K, V> {
+public class LazyValueMap<K, V> extends DelegatingMap<K, V> {
 
   private final Function<K, V> loadFunction;
 
@@ -16,11 +16,11 @@ public class LazyLambdaMap<K, V> extends DelegatingMap<K, V> {
 
   private final ReentrantLock lock = new ReentrantLock();
 
-  public LazyLambdaMap(final Function<K, V> loadFunction) {
+  public LazyValueMap(final Function<K, V> loadFunction) {
     this(new LinkedHashMap<>(), loadFunction);
   }
 
-  public LazyLambdaMap(final Map<K, V> map, final Function<K, V> loadFunction) {
+  public LazyValueMap(final Map<K, V> map, final Function<K, V> loadFunction) {
     this.map = map;
     this.externalMap = Collections.unmodifiableMap(map);
     this.loadFunction = loadFunction;

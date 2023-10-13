@@ -1,10 +1,10 @@
 package org.jeometry.coordinatesystem.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jeometry.common.collection.map.LazyValueMap;
 import org.jeometry.coordinatesystem.operation.ChainedCoordinatesOperation;
 import org.jeometry.coordinatesystem.operation.CoordinatesOperation;
 import org.jeometry.coordinatesystem.operation.NoOpOperation;
@@ -24,7 +24,8 @@ public abstract class AbstractCoordinateSystem implements CoordinateSystem {
 
   private final String name;
 
-  private Map<CoordinateSystem, CoordinatesOperation> coordinatesOperationByCoordinateSystem;
+  private final Map<CoordinateSystem, CoordinatesOperation> coordinatesOperationByCoordinateSystem = new LazyValueMap<>(
+    this::newOperation);
 
   public AbstractCoordinateSystem(final int id, final String name, final List<Axis> axis,
     final Area area, final boolean deprecated) {
@@ -127,31 +128,12 @@ public abstract class AbstractCoordinateSystem implements CoordinateSystem {
     if (coordinateSystem == this) {
       return null;
     } else {
-      if (this.coordinatesOperationByCoordinateSystem == null) {
-        synchronized (this) {
-          if (this.coordinatesOperationByCoordinateSystem == null) {
-            this.coordinatesOperationByCoordinateSystem = new HashMap<>();
-          }
-        }
-      }
-      synchronized (this.coordinatesOperationByCoordinateSystem) {
-        CoordinatesOperation coordinatesOperation = this.coordinatesOperationByCoordinateSystem
-          .get(coordinateSystem);
-        if (coordinatesOperation == null) {
-          try {
-            coordinatesOperation = newCoordinatesOperation(coordinateSystem);
-          } catch (final IllegalArgumentException e) {
-            coordinatesOperation = NoOpOperation.INSTANCE;
-            LoggerFactory.getLogger(getClass())
-              .error("Cannot get conversion from " + this + " to " + coordinateSystem, e);
-          }
-          this.coordinatesOperationByCoordinateSystem.put(coordinateSystem, coordinatesOperation);
-        }
-        if (coordinatesOperation == NoOpOperation.INSTANCE) {
-          return null;
-        } else {
-          return coordinatesOperation;
-        }
+      final CoordinatesOperation coordinatesOperation = this.coordinatesOperationByCoordinateSystem
+        .get(coordinateSystem);
+      if (coordinatesOperation == NoOpOperation.INSTANCE) {
+        return null;
+      } else {
+        return coordinatesOperation;
       }
     }
   }
@@ -193,6 +175,19 @@ public abstract class AbstractCoordinateSystem implements CoordinateSystem {
         return new ChainedCoordinatesOperation(operations);
       }
     }
+  }
+
+  private CoordinatesOperation newOperation(final CoordinateSystem coordinateSystem) {
+    CoordinatesOperation coordinatesOperation;
+    try {
+      coordinatesOperation = newCoordinatesOperation(coordinateSystem);
+    } catch (final IllegalArgumentException e) {
+      coordinatesOperation = NoOpOperation.INSTANCE;
+      LoggerFactory.getLogger(getClass())
+        .error("Cannot get conversion from " + this + " to " + coordinateSystem, e);
+    }
+    this.coordinatesOperationByCoordinateSystem.put(coordinateSystem, coordinatesOperation);
+    return coordinatesOperation;
   }
 
   @Override

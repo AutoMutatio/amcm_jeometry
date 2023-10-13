@@ -12,6 +12,8 @@ import java.util.TreeMap;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 
+import org.jeometry.common.data.refresh.RefreshableValueHolder;
+import org.jeometry.common.data.refresh.SupplierRefreshableValueHolder;
 import org.jeometry.coordinatesystem.model.datum.GeodeticDatum;
 import org.jeometry.coordinatesystem.model.unit.AngularUnit;
 import org.jeometry.coordinatesystem.model.unit.LinearUnit;
@@ -22,7 +24,8 @@ import org.jeometry.coordinatesystem.util.Equals;
 
 public class ProjectedCoordinateSystem extends AbstractHorizontalCoordinateSystem {
 
-  private CoordinatesProjection coordinatesProjection;
+  private final RefreshableValueHolder<CoordinatesProjection> coordinatesProjection = new SupplierRefreshableValueHolder<>(
+    this::newCoordinatesProjection);
 
   private final GeographicCoordinateSystem geographicCoordinateSystem;
 
@@ -197,11 +200,8 @@ public class ProjectedCoordinateSystem extends AbstractHorizontalCoordinateSyste
   }
 
   @SuppressWarnings("unchecked")
-  public synchronized <P extends CoordinatesProjection> P getCoordinatesProjection() {
-    if (this.coordinatesProjection == null) {
-      this.coordinatesProjection = this.coordinateOperationMethod.newCoordinatesProjection(this);
-    }
-    return (P)this.coordinatesProjection;
+  public <P extends CoordinatesProjection> P getCoordinatesProjection() {
+    return (P)this.coordinatesProjection.get();
   }
 
   @Override
@@ -332,6 +332,10 @@ public class ProjectedCoordinateSystem extends AbstractHorizontalCoordinateSyste
       }
     }
     return false;
+  }
+
+  private CoordinatesProjection newCoordinatesProjection() {
+    return this.coordinateOperationMethod.newCoordinatesProjection(this);
   }
 
   @Override

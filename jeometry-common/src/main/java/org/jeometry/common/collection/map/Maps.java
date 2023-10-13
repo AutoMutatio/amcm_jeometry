@@ -828,11 +828,9 @@ public interface Maps {
 
   static <K, V extends Comparable<V>> void putIfGreaterThan(final Map<K, V> map, final K key,
     final V value) {
-    synchronized (map) {
-      final V lastValue = map.get(key);
-      if (lastValue == null || value.compareTo(lastValue) > 1) {
-        map.put(key, value);
-      }
+    final V lastValue = map.get(key);
+    if (lastValue == null || value.compareTo(lastValue) > 1) {
+      map.put(key, value);
     }
   }
 
@@ -878,21 +876,17 @@ public interface Maps {
 
   static <K, V extends Comparable<V>> void removeIfGreaterThanEqual(final Map<K, V> map,
     final K key, final V value) {
-    synchronized (map) {
-      final V lastValue = map.get(key);
-      if (lastValue == null || value.compareTo(lastValue) >= 0) {
-        map.remove(key);
-      }
+    final V lastValue = map.get(key);
+    if (lastValue == null || value.compareTo(lastValue) >= 0) {
+      map.remove(key);
     }
   }
 
   static <K, V extends Comparable<V>> void removeIfLessThanEqual(final Map<K, V> map, final K key,
     final V value) {
-    synchronized (map) {
-      final V lastValue = map.get(key);
-      if (lastValue == null || value.compareTo(lastValue) <= 0) {
-        map.remove(key);
-      }
+    final V lastValue = map.get(key);
+    if (lastValue == null || value.compareTo(lastValue) <= 0) {
+      map.remove(key);
     }
   }
 
