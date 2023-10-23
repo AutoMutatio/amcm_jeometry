@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.jeometry.common.collection.map.MapEx;
 import org.jeometry.common.json.JsonObject;
@@ -70,15 +69,16 @@ public interface Reader<T>
   default void close() {
   }
 
-  @Override
-  default Reader<T> filter(final Predicate<? super T> filter) {
-    final Iterator<T> iterator = iterator();
-    return new FilterIterator<>(filter, iterator);
-  }
+  // @Override
+  // default Reader<T> filter(final Predicate<? super T> filter) {
+  // final Iterator<T> iterator = iterator();
+  // return new FilterIterator<>(filter, iterator);
+  // }
 
-  default <O> Reader<O> filter(final Predicate<T> filter, final Function<T, O> converter) {
-    return filter(filter).map(converter);
-  }
+  // default <O> Reader<O> filter(final Predicate<T> filter, final Function<T,
+  // O> converter) {
+  // return filter(filter).map(converter);
+  // }
 
   default void forEach(final BiConsumer<Cancellable, ? super T> action) {
     forEach(this, action);

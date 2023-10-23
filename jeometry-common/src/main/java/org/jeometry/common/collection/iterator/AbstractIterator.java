@@ -3,10 +3,7 @@ package org.jeometry.common.collection.iterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.jeometry.common.util.BaseObjectWithProperties;
-
-public abstract class AbstractIterator<T> extends BaseObjectWithProperties
-  implements Iterator<T>, Reader<T> {
+public abstract class AbstractIterator<T> implements Iterator<T>, BaseIterable<T> {
 
   private boolean hasNext = true;
 
@@ -16,7 +13,6 @@ public abstract class AbstractIterator<T> extends BaseObjectWithProperties
 
   private T object;
 
-  @Override
   public final void close() {
     this.hasNext = false;
     this.object = null;
@@ -80,7 +76,6 @@ public abstract class AbstractIterator<T> extends BaseObjectWithProperties
     }
   }
 
-  @Override
   public void open() {
     init();
   }

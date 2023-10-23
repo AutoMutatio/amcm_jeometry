@@ -15,23 +15,15 @@
  */
 package org.jeometry.common.collection.iterator;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.jeometry.common.collection.list.ArrayListEx;
 import org.jeometry.common.collection.list.ListEx;
 import org.jeometry.common.collection.list.Lists;
 import org.jeometry.common.collection.value.Single;
@@ -71,54 +63,8 @@ public interface BaseIterable<T> extends Iterable<T> {
     }
   }
 
-  default <K> Map<K, T> collectMap(final Function<T, K> keyFunction) {
-    final Map<K, T> map = new LinkedHashMap<>();
-    for (final T value : this) {
-      if (value != null) {
-        final K key = keyFunction.apply(value);
-        map.put(key, value);
-      }
-    }
-    return map;
-  }
-
-  default <K, C extends Collection<T>> Map<K, C> collectMapCollection(
-    final Supplier<C> collectionSupplier, final Function<T, K> keyFunction) {
-    final Map<K, C> map = new LinkedHashMap<>();
-    for (final T value : this) {
-      if (value != null) {
-        final K key = keyFunction.apply(value);
-        C collection = map.get(key);
-        if (collection == null) {
-          collection = collectionSupplier.get();
-          map.put(key, collection);
-        }
-        collection.add(value);
-      }
-    }
-    return map;
-  }
-
-  default <K> Map<K, ListEx<T>> collectMapList(final Function<T, K> keyFunction) {
-    return collectMapCollection(Lists.factoryArray(), keyFunction);
-  }
-
-  default <K> Map<K, Set<T>> collectMapSet(final Function<T, K> keyFunction) {
-    return collectMapCollection(LinkedHashSet::new, keyFunction);
-  }
-
-  default <K> Map<K, Set<T>> collectMapTreeSet(final Function<T, K> keyFunction) {
-    return collectMapCollection(TreeSet::new, keyFunction);
-  }
-
   default BaseIterable<T> filter(final Predicate<? super T> filter) {
-    final ListEx<T> newList = new ArrayListEx<>();
-    for (final T value : this) {
-      if (filter.test(value)) {
-        newList.add(value);
-      }
-    }
-    return newList;
+    return new FilterIterator<T>(filter, iterator());
   }
 
   default Single<T> first() {

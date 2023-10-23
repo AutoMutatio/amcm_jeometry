@@ -11,7 +11,7 @@ public interface Iterators {
       return (Reader<V>)iterable;
     } else {
       final Iterator<V> iterator = iterable.iterator();
-      return new FilterIterator<>(filter, iterator);
+      return null;
     }
   }
 

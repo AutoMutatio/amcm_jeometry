@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 import org.jeometry.common.exception.Exceptions;
-import org.jeometry.common.io.CloseableWrapper;
 import org.jeometry.common.logging.Logs;
 
 @FunctionalInterface
@@ -62,10 +61,10 @@ public interface BaseCloseable extends Closeable {
     }
   }
 
+  static void closeValue(Object v) {
+  }
+
   @Override
   void close();
 
-  default BaseCloseable wrap() {
-    return new CloseableWrapper(this);
-  }
 }

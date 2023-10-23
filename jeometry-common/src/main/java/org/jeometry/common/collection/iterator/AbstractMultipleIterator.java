@@ -10,7 +10,7 @@ public abstract class AbstractMultipleIterator<T> extends AbstractIterator<T> {
   @Override
   public void closeDo() {
     if (this.iterator != null) {
-      BaseCloseable.closeSilent(this.iterator);
+      BaseCloseable.closeValue(this.iterator);
       this.iterator = null;
     }
   }
@@ -29,7 +29,7 @@ public abstract class AbstractMultipleIterator<T> extends AbstractIterator<T> {
         this.iterator = getNextIterator();
       }
       while (this.iterator != null && !this.iterator.hasNext()) {
-        BaseCloseable.closeSilent(this.iterator);
+        BaseCloseable.closeValue(this.iterator);
         this.iterator = getNextIterator();
       }
       if (this.iterator == null) {
