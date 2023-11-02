@@ -168,7 +168,7 @@ public interface BaseIterable<T> extends Iterable<T> {
    *
    * @return The list of items.
    */
-  default ListEx<T> toList() {
+  default List<T> toList() {
     final List<T> items = new ArrayList<>();
     forEach(i -> items.add(i));
     return items;
