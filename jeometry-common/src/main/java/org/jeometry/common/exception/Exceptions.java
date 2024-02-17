@@ -1,8 +1,10 @@
 package org.jeometry.common.exception;
 
+import java.io.InterruptedIOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.channels.ClosedByInterruptException;
 import java.util.concurrent.ExecutionException;
 
 public interface Exceptions {
@@ -137,5 +139,11 @@ public interface Exceptions {
 
   static WrappedException wrap(final Throwable e) {
     return new WrappedException(e);
+  }
+
+  static boolean isInterruptException(final Throwable e) {
+    return hasCause(e, InterruptedException.class)
+      || hasCause(e, InterruptedIOException.class)
+      || hasCause(e, ClosedByInterruptException.class);
   }
 }

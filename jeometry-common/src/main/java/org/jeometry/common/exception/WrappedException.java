@@ -11,6 +11,10 @@ public final class WrappedException extends RuntimeException {
     super(cause);
   }
 
+  public <T extends Throwable> T getCause(final Class<T> clazz) {
+    return Exceptions.getCause(this, clazz);
+  }
+
   public boolean isException(final Class<? extends Throwable> clazz) {
     final Throwable cause = getCause();
     if (cause == null) {
